@@ -19,6 +19,7 @@ iter<-100
 #Since the RD method has been proved to provide the true Shapley values for this example, we do not repeat the RD method and designate its results as the true Shapley values.
 true<-rep(0,d)
 time1<-Sys.time()
+#Generate recursive designs=============================================================================================================================
 drecur<-drec(d)
 permutation<-sample(2:drecur)
 design0<-recurdesign(drecur)[,c(1,permutation)][,1:d]
@@ -33,6 +34,7 @@ for(j in 2:d){
 reprowtag<-left_join(data.frame(design),mutate(distinct(data.frame(design)), rn=row_number()))$rn
 design<-design[!duplicated(design),]
 n<-nrow(design)
+#Evaluate the coalition values in parallel=====================================================================================================================
 rowgroup<-c(rep(n%/%corenumber+1,n%%corenumber),rep(n%/%corenumber,corenumber-n%%corenumber))  
 cl <- makeCluster(corenumber)
 clusterSetRNGStream(cl)
@@ -51,6 +53,7 @@ a<-resultrec[[1]]
 for (i in 2:corenumber) {
   a<-c(a,resultrec[[i]])
 }
+#Derive the approximations (true Shapley values) provided by Algorithm 1==================================================================================================
 for(i in 1:d){
   true[i]<-sum(ycombine(drecur)*a[reprowtag[((i-1)*4*(drecur-1)+1):(i*4*(drecur-1))]])
 }

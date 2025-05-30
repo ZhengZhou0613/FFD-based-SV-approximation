@@ -35,6 +35,7 @@ phirec<-matrix(0,iter,d) #The matrix to record the approximations of RD=========
 nrec<-rep(0,iter)
 for (r in 1:iter) {
   time1<-Sys.time()
+  #Generate recursive designs=============================================================================================================================
   drecur<-drec(d)
   permutation<-sample(2:drecur)
   design0<-recurdesign(drecur)[,c(1,permutation)][,1:d]
@@ -50,6 +51,7 @@ for (r in 1:iter) {
   design<-design[!duplicated(design),]
   n<-nrow(design)
   nrec[r]<-n
+  #Evaluate the coalition values in parallel=====================================================================================================================
   rowgroup<-c(rep(n%/%corenumber+1,n%%corenumber),rep(n%/%corenumber,corenumber-n%%corenumber))  
   cl <- makeCluster(corenumber)
   clusterSetRNGStream(cl)
@@ -68,6 +70,7 @@ for (r in 1:iter) {
   for (i in 2:corenumber) {
     a<-c(a,resultrec[[i]])
   }
+  #Derive the approximations provided by Algorithm 1==================================================================================================
   for(i in 1:d){
     phirec[r,i]<-sum(ycombine(drecur)*a[reprowtag[((i-1)*4*(drecur-1)+1):(i*4*(drecur-1))]])
   }
@@ -87,11 +90,13 @@ nstar<-rep(0,iter)
 phirecstar<-matrix(0,iter,d) #The matrix to record the corrected approximations of RD (Algorithm 2)=================================================================
 philsadd<-matrix(0,iter,d)
 testresult<-rep(T,d)
+#Numbers of key players selected in the two-step correction ================================================================================================================
 t_1<-6
 t_2<-21
 for (r in 1:iter) {
   time1<-Sys.time()
   print(r)
+  # Test whether $\widetilde{\bm{\Phi}}$ and $\bm{\Phi}$ are proportional=====================================================================================================
   phirecorder<-order(phirec[r,])
   ud<-round(seq(from=1,to=d,by=(d-1)/(t_1-1)))
   keyplayer1<-c()
@@ -145,6 +150,7 @@ for (r in 1:iter) {
   lmresult<-summary(lm(phirec[r,keyplayer1]~philsadd[r,keyplayer1]))
   print(coef(lmresult)[,4])
   print(lmresult$r.squared)
+  #If the test passes, correct the bias by the shrinkage method ========================================================================
   if((coef(lmresult)[1,4]>0.05)&(coef(lmresult)[2,4]<0.05)&(lmresult$r.squared>0.75)){
     testresult[r]<-T
     print("linearity test=")
@@ -158,6 +164,7 @@ for (r in 1:iter) {
     print("linearity test=")
     print(testresult[r])
   }
+  # If the test fails, we continue to add evaluation coalitions to further explore the potential relationship between $\widetilde{\bm{\Phi}}$ and $\bm{\Phi}$.==================================================
   if(testresult[r]==F){
     ud<-round(seq(from=1,to=d,by=(d-1)/(t_2-1)))
     keyplayer2<-c()
@@ -207,6 +214,7 @@ for (r in 1:iter) {
     }
     philsadd[r,addkeyplayer]<-colMeans(a[,addkeyplayer])
     nstar[r]<-nstar[r]+nadd
+    #Interpolation-based correction==================================================================================================
     model<-ss(phirec[r,keyplayer2],philsadd[r,keyplayer2])
     phirecstar[r,]<-predict(model,phirec[r,])$y
     print(phirecstar[r,])
@@ -215,6 +223,7 @@ for (r in 1:iter) {
   }
 }
 
+#Record the cost of the correction method==========================================================================================
 nrecstar<-nrec+nstar
 
 identical(phirec1star,phirecstar)
