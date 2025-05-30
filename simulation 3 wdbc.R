@@ -98,7 +98,7 @@ for (r in 1:iter) {
 #Bias detection and correction (shrinkage)========================================================================================================================
 phirec1star<-matrix(0,iter,d) #The matrix to record the corrected approximations of RD (shrinkage)===========================================================
 for(i in 1:iter){
-  phirec1star[i,]<-phirec[i,]-(sum(phirec[i,])-val(c(1:d)))/sum(phirec[i,])*phirec[i,]
+  phirec1star[i,]<-phirec[i,]-(sum(phirec[i,])-val(c(1:d),xt))/sum(phirec[i,])*phirec[i,]
 }
 
 #Bias detection and correction (Algorithm 2)========================================================================================================================
