@@ -3,7 +3,7 @@ library(parallel)
 library(dplyr)
 library(npreg)
 library(here)
-source(here("main","shapley functions.R"))
+source(here("shapley functions.R"))
 set.seed(2)
 #Initialize an airport game===========================================================================================================================
 #d=257, {w_1,...,w_d} randomly sampled from {10,\ldots,100}=============================================================================================================

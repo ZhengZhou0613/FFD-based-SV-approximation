@@ -3,7 +3,7 @@ library(parallel)
 library(rpart)
 library(dplyr)
 library(here)
-source(here("main","shapley functions.R"))
+source(here("shapley functions.R"))
 set.seed(3)
 #Read and preprocess dataset===========================================================================================
 wdbc <- read.csv(here("data","wdbc.csv"),header=F)

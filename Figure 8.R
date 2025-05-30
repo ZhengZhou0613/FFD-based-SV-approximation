@@ -2,7 +2,7 @@ library(MASS)
 library(mvtnorm)
 library(parallel)
 library(here)
-source(here("main","shapley functions.R"))
+source(here("shapley functions.R"))
 
 # Compute the coefficients $B_i^j$ defined in Theorem 6, $i=2,...,8$, $j=2,...,2^i$. 
 hmax<-8

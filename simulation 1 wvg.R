@@ -3,7 +3,7 @@ library(parallel)
 library(dplyr)
 library(npreg)
 library(here)
-source(here("main","shapley functions.R"))
+source(here("shapley functions.R"))
 set.seed(1)
 #Initialize a weighted voting game==========================================================================================
 #d=129, {w_1,...,w_d} randomly sampled from {1,\ldots,500}=============================================================================================================
