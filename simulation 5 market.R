@@ -5,7 +5,7 @@ library(here)
 source(here("shapley functions.R"))
 set.seed(5)
 #Read the dataset=========================================================================================================================
-W<-as.matrix(read.csv(here("data","crime.csv"),header = F))
+W<-as.matrix(read.csv(here("data","market.csv"),header = F))
 d<-17
 #Define the value function================================================================================================================
 val<-function(sets){
